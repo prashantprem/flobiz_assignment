@@ -78,6 +78,12 @@ dependencies {
     //timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
+    //sdp
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+
+    //circular image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 
 
 }

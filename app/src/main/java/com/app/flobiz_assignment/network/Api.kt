@@ -1,6 +1,6 @@
 package com.app.flobiz_assignment.network
 
-import com.app.flobiz_assignment.models.QuestionResponse.Item
+import com.app.flobiz_assignment.models.QuestionResponse.QuesResponse
 import com.app.flobiz_assignment.network.Endpoints.GET_QUESTIONS
 import com.app.flobiz_assignment.network.Endpoints.KEY
 import com.app.flobiz_assignment.network.Endpoints.ORDER
@@ -17,5 +17,5 @@ interface Api {
         @Query(ORDER) order: String,
         @Query(SORT) sort: String,
         @Query(SITE) site: String,
-        ) : Response<Item>
+        ) : Response<QuesResponse>
 }

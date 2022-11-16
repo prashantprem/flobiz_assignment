@@ -5,6 +5,19 @@ import com.google.gson.annotations.SerializedName
 
 class QuestionResponse {
 
+
+    data class QuesResponse(
+        @SerializedName("items")
+        @Expose
+        val items : List<Item>,
+        @SerializedName("has_more")
+        val hasMore: Boolean,
+        @SerializedName("quota_max")
+        val quotaMax: Int,
+        @SerializedName("quota_remaining")
+        val quotaRem: Int
+    )
+
     data class Item (
 
         @SerializedName("tags")
