@@ -6,5 +6,4 @@ object Endpoints {
     const val ORDER = "order"
     const val SORT = "activity"
     const val SITE = "site"
-
 }
