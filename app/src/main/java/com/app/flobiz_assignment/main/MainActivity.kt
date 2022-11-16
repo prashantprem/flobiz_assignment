@@ -3,6 +3,7 @@ package com.app.flobiz_assignment.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.app.Utils
 import com.app.flobiz_assignment.R
 import com.app.flobiz_assignment.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +19,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.fetchQuestions()
+        if(Utils.isNetworkAvailable(this)){
+            viewModel.fetchQuestions()
+        }
         observeViewModel()
     }
 
