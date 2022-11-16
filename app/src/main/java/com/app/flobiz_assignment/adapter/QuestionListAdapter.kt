@@ -11,9 +11,8 @@ import com.app.flobiz_assignment.R
 import com.app.flobiz_assignment.models.QuestionResponse.Item
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import org.w3c.dom.Text
 
-class QuestionListAdapter(private val mList: List<Item>) : RecyclerView.Adapter<QuestionListAdapter.ViewHolder>(){
+class QuestionListAdapter(private var mList: List<Item>) : RecyclerView.Adapter<QuestionListAdapter.ViewHolder>(){
 
     private var context: Context? = null
 
@@ -48,5 +47,14 @@ class QuestionListAdapter(private val mList: List<Item>) : RecyclerView.Adapter<
         val name: TextView = itemView.findViewById(R.id.item_name)
         val posted: TextView = itemView.findViewById(R.id.item_created_on)
 
+    }
+
+    fun filterList(filterList: List<Item>) {
+        // below line is to add our filtered
+        // list in our course array list.
+        mList = filterList
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged()
     }
 }
