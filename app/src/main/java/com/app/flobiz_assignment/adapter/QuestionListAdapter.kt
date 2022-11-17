@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.app.Utils
 import com.app.flobiz_assignment.R
 import com.app.flobiz_assignment.models.QuestionResponse.Item
 import com.bumptech.glide.Glide
@@ -28,7 +29,9 @@ class QuestionListAdapter(private var mList: List<Item>) : RecyclerView.Adapter<
         val item = mList[position]
         holder.name.text = item.owner.displayName
         holder.title.text = item.title
-        holder.posted.text = item.creationDate.toString()
+        holder.posted.text = item.creationDate.let {
+            Utils.formatTimeStamp(it)
+        }
         context?.let {
             Glide.with(it)
                 .load(item.owner.profileImage)
