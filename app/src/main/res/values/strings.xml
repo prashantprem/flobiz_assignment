@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">flobiz_assignment</string>
-    <string name="avg_view_count">Average View \n Count\n %1$s</string>
-    <string name="avg_ans_count">Average Answer \n Count\n %1$s</string>
+    <string name="avg_view_count">Average View Count\n %1$s</string>
+    <string name="avg_ans_count">Average Answer Count\n %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

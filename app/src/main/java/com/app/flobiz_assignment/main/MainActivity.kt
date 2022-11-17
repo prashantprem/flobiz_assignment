@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding.mainContainerLayout.visibility = View.GONE
+        binding.tvAvgViewCount.visibility = View.GONE
+        binding.tvAvgAnswerCount.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
         setContentView(binding.root)
         if(Utils.isNetworkAvailable(this)){
@@ -45,6 +47,10 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
     }
 
     private fun setUpListeners() {
+
+        binding.clearFilter.setOnClickListener {
+            updateRcv()
+        }
 
         binding.filter.setOnClickListener {
             openFilterBottomSheet();
@@ -99,16 +105,6 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
 
     }
 
-    private fun updateRcv(mList: List<Item>){
-        calculateAverage(mList)
-        binding.progressBar.visibility = View.GONE
-        binding.mainContainerLayout.visibility = View.VISIBLE
-        binding.searchLayout.visibility = View.GONE
-        val adapter = QuestionListAdapter(mList)
-        binding.rcvQuestions.layoutManager = LinearLayoutManager(this)
-        binding.rcvQuestions.adapter = adapter
-
-    }
 
 //    private fun saveToDb(question: List<Item>) {
 //        for(q in question){
@@ -119,6 +115,8 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
     private fun initRcv( mList: List<Item>){
         calculateAverage(mList)
         binding.progressBar.visibility = View.GONE
+        binding.tvAvgViewCount.visibility = View.VISIBLE
+        binding.tvAvgAnswerCount.visibility = View.VISIBLE
         binding.mainContainerLayout.visibility = View.VISIBLE
         binding.searchLayout.visibility = View.GONE
         val adapter = QuestionListAdapter(mList)
@@ -161,8 +159,10 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
                 }
             }
             if(filteredList.isEmpty()){
+                binding.clearFilter.visibility = View.GONE
                 adapter?.filterList(question!!)
             } else {
+                binding.clearFilter.visibility = View.VISIBLE
                 adapter?.filterList(filteredList)
             }
         }
@@ -188,5 +188,14 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
             adapter?.filterList(filteredList)
         }
     }
+
+    private fun updateRcv(){
+        binding.mainContainerLayout.visibility = View.VISIBLE
+        binding.clearFilter.visibility = View.GONE
+        val adapter = question?.let { QuestionListAdapter(it) }
+        binding.rcvQuestions.layoutManager = LinearLayoutManager(this)
+        binding.rcvQuestions.adapter = adapter
+    }
+
 
 }

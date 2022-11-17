@@ -6,43 +6,89 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/bg_color"
     tools:context=".main.MainActivity">
-
     <LinearLayout
-        android:id="@+id/toolbar"
+        android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:orientation="horizontal">
+        android:background="@drawable/bg_rounded_color"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:orientation="horizontal">
 
-        <SearchView
-            android:id="@+id/search"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:focusable="true"
-            app:iconifiedByDefault="false"
-            android:focusableInTouchMode="true"
-            android:background="@drawable/bg_rounded_stroke" />
+            <SearchView
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:focusable="true"
+                app:iconifiedByDefault="false"
+                android:focusableInTouchMode="true"
+                android:iconifiedByDefault="false"
+                android:background="@drawable/bg_rounded_stroke" />
 
-        <ImageView
-            android:id="@+id/filter"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_margin="@dimen/_8sdp"
-            android:src="@drawable/filter" />
+            <ImageView
+                android:id="@+id/filter"
+                android:padding="@dimen/_4sdp"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/filter"
+                android:layout_marginEnd="@dimen/_8sdp"
+                app:tint="@color/white" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container_avg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_16sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_avg_view_count"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_rounded_stroke"
+                android:fontFamily="@font/muli_semibold"
+                android:gravity="center"
+                android:padding="@dimen/_13sdp"
+                android:text="@string/avg_ans_count"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:textColor="@color/main_blue_color" />
+
+            <TextView
+                android:id="@+id/tv_avg_answer_count"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_rounded_stroke"
+                android:fontFamily="@font/muli_semibold"
+                android:gravity="center"
+                android:padding="@dimen/_13sdp"
+                android:text="@string/avg_ans_count"
+                android:textColor="@color/main_blue_color" />
+        </LinearLayout>
     </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_16sdp"
         android:visibility="gone"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/container_toolbar">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_search"
             android:layout_width="match_parent"
@@ -57,49 +103,32 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_container_layout"
         android:layout_width="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:visibility="visible"
-        android:layout_margin="@dimen/_16sdp"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:layout_below="@+id/container_toolbar"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:visibility="visible">
         <TextView
-            android:id="@+id/tv_avg_view_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:background="@drawable/bg_rounded_stroke"
-            android:gravity="center"
-            android:padding="@dimen/_16sdp"
-            android:text="vjbhfdvgjdjkvfdjkv"
-            app:layout_constraintEnd_toStartOf="@+id/tv_avg_answer_count"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/clear_filter"
+            android:layout_width="94dp"
+            android:layout_height="0dp"
+            android:fontFamily="@font/muli_semibold"
+            android:text="Clear Filter"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/rcv_questions"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_avg_answer_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_16sdp"
-            android:background="@drawable/bg_rounded_stroke"
-            android:gravity="center"
-            android:padding="@dimen/_16sdp"
-            android:text="vjbhfdvgjdjkvfdfdgv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tv_avg_view_count"
-            app:layout_constraintTop_toTopOf="@+id/tv_avg_view_count" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_questions"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_avg_view_count"
+            app:layout_constraintTop_toBottomOf="@+id/clear_filter"
             tools:layout_editor_absoluteX="21dp"
             tools:listitem="@layout/item_rcv" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -108,6 +137,6 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_centerInParent="true"
+        android:indeterminateTint="@color/main_blue_color"
         android:layout_height="wrap_content" />
-
     </RelativeLayout>
