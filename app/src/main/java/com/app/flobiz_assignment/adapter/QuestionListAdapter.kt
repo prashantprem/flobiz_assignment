@@ -1,6 +1,8 @@
 package com.app.flobiz_assignment.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +40,10 @@ class QuestionListAdapter(private var mList: List<Item>) : RecyclerView.Adapter<
                 .transform(CircleCrop())
                 .into(holder.profile)
         }
+
+        holder.itemView.setOnClickListener {
+            openInBrowser(item.link)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -59,5 +65,11 @@ class QuestionListAdapter(private var mList: List<Item>) : RecyclerView.Adapter<
         // below line is to notify our adapter
         // as change in recycler view data.
         notifyDataSetChanged()
+    }
+
+    private fun openInBrowser(url: String) {
+        val openURL = Intent(Intent.ACTION_VIEW)
+        openURL.data = Uri.parse(url)
+        context?.startActivity(openURL)
     }
 }
