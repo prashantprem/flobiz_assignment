@@ -29,9 +29,8 @@
                 android:layout_height="@dimen/_30sdp"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
-                android:focusable="true"
                 app:iconifiedByDefault="false"
-                android:focusableInTouchMode="true"
+                android:focusable="false"
                 android:iconifiedByDefault="false"
                 android:background="@drawable/bg_rounded_stroke" />
 
