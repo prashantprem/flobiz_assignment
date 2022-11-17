@@ -13,19 +13,13 @@ import com.app.flobiz_assignment.models.AnyList
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import timber.log.Timber
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_FILTERS = "filters"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FilterBottomSheet.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FilterBottomSheet : BottomSheetDialogFragment() {
 
     private var filters: ArrayList<String> ?= null
     private lateinit var binding : FragmentFilterBottomSheetBinding
+    private var listener : FilterAdapter.OnTagClickInterface ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +44,7 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
                     FilterAdapter(context = it, it1,object : FilterAdapter.OnTagClickInterface{
                         override fun onTagSelected(tag: String?) {
                             super.onTagSelected(tag)
+                            listener?.onTagSelected(tag)
                             Timber.tag("Tag").d(tag)
                         }
 
@@ -64,8 +59,9 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(filters: ArrayList<String>) =
+        fun newInstance(filters: ArrayList<String>, listener : FilterAdapter.OnTagClickInterface) =
             FilterBottomSheet().apply {
+                this.listener = listener
                 arguments = Bundle().apply {
                     putStringArrayList(ARG_FILTERS,filters)
                 }

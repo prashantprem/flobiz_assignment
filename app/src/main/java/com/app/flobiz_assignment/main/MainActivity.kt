@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.Utils
 import com.app.flobiz_assignment.R
+import com.app.flobiz_assignment.adapter.FilterAdapter
 import com.app.flobiz_assignment.adapter.QuestionListAdapter
 import com.app.flobiz_assignment.bottomsheet.FilterBottomSheet
 import com.app.flobiz_assignment.databinding.ActivityMainBinding
@@ -18,7 +19,7 @@ import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
 
     private val viewModel by viewModels<MainViewModel>()
 //    private val questionViewModel by viewModels<QuestionViewModal>()
@@ -74,33 +75,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun openFilterBottomSheet() {
         filters?.let { ArrayList(it) }
-            ?.let { FilterBottomSheet.newInstance(it).show(supportFragmentManager,"BsFilter") }
+            ?.let { FilterBottomSheet.newInstance(it,this).show(supportFragmentManager,"BsFilter") }
     }
 
-    private fun filter(text: String){
-        val adapter = question?.let { QuestionListAdapter(it) }
-        binding.rcvSearch.adapter = adapter
-        val filteredList = mutableListOf<Item>()
-        for(q in question!!){
-            if (q.title.lowercase().contains(text.lowercase())
-                || q.owner.displayName.lowercase().contains(text.lowercase())) {
-                filteredList.add(q)
-            }
-        }
 
-        if(filteredList.isEmpty()){
-            binding.searchLayout.visibility = View.GONE
-            binding.mainContainerLayout.visibility = View.VISIBLE
-            initRcv(question!!)
-        } else {
-            binding.mainContainerLayout.visibility = View.GONE
-            binding.searchLayout.visibility = View.VISIBLE
-            adapter?.filterList(filteredList)
-        }
-
-
-
-    }
 
     private fun observeViewModel(){
         viewModel.allQuestionList.observe(this){
@@ -163,6 +141,52 @@ class MainActivity : AppCompatActivity() {
         val ans = sumAns/mList!!.size
         binding.tvAvgViewCount.text = resources.getString(R.string.avg_view_count,view.toString())
         binding.tvAvgAnswerCount.text = resources.getString(R.string.avg_ans_count,ans.toString())
+    }
+
+    override fun onTagSelected(tag: String?) {
+        super.onTagSelected(tag)
+        if (tag != null) {
+            filterItemByTag(tag)
+        }
+    }
+
+    private fun filterItemByTag(tag: String){
+        if(!question.isNullOrEmpty()){
+            val adapter = question?.let { QuestionListAdapter(it) }
+            binding.rcvQuestions.adapter = adapter
+            val filteredList = mutableListOf<Item>()
+            for(q in question!!){
+                if(q.tags.contains(tag)){
+                    filteredList.add(q)
+                }
+            }
+            if(filteredList.isEmpty()){
+                adapter?.filterList(question!!)
+            } else {
+                adapter?.filterList(filteredList)
+            }
+        }
+    }
+    private fun filter(text: String){
+        val adapter = question?.let { QuestionListAdapter(it) }
+        binding.rcvSearch.adapter = adapter
+        val filteredList = mutableListOf<Item>()
+        for(q in question!!){
+            if (q.title.lowercase().contains(text.lowercase())
+                || q.owner.displayName.lowercase().contains(text.lowercase())) {
+                filteredList.add(q)
+            }
+        }
+
+        if(filteredList.isEmpty()){
+            binding.searchLayout.visibility = View.GONE
+            binding.mainContainerLayout.visibility = View.VISIBLE
+            initRcv(question!!)
+        } else {
+            binding.mainContainerLayout.visibility = View.GONE
+            binding.searchLayout.visibility = View.VISIBLE
+            adapter?.filterList(filteredList)
+        }
     }
 
 }
