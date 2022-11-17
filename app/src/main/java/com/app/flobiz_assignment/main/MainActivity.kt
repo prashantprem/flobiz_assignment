@@ -12,22 +12,21 @@ import com.app.flobiz_assignment.adapter.FilterAdapter
 import com.app.flobiz_assignment.adapter.QuestionListAdapter
 import com.app.flobiz_assignment.bottomsheet.FilterBottomSheet
 import com.app.flobiz_assignment.databinding.ActivityMainBinding
-import com.app.flobiz_assignment.models.QuestionResponse
 import com.app.flobiz_assignment.models.QuestionResponse.Item
+import com.app.flobiz_assignment.room.QuestionEntity
+import com.app.flobiz_assignment.room.QuestionViewModal
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
 
     private val viewModel by viewModels<MainViewModel>()
-//    private val questionViewModel by viewModels<QuestionViewModal>()
+    private val questionViewModel by viewModels<QuestionViewModal>()
     private lateinit var binding: ActivityMainBinding
-    private var question : List<Item> ? = null
-    private var cachedQuestion : List<QuestionResponse.roomData> ? = null
-    private var avgView = 0
-    private var avgAns = 0
+    private var question : List<Item>  = ArrayList()
     private var filters : HashSet<String> ? = null
 
 
@@ -53,14 +52,14 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
         }
 
         binding.filter.setOnClickListener {
-            openFilterBottomSheet();
+            openFilterBottomSheet()
         }
         binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 if(!p0.isNullOrEmpty()){
                     filter(p0)
                 }else{
-                    initRcv(question!!)
+                    initRcv(question)
                 }
 
                 return false
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
                 if(!p0.isNullOrEmpty()){
                     filter(p0)
                 }else{
-                    initRcv(question!!)
+                    initRcv(question)
                 }
 
                 return false
@@ -92,25 +91,26 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
             if(it != null){
                 question = it
                 initRcv(it)
-//                saveToDb(question!!)
+                saveToDb(question)
             }
         }
 
 
-//        questionViewModel.allQuestions?.observe(this){
-//            if(!Utils.isNetworkAvailable(this) && it != null){
-//                updateRcv(it)
-//            }
-//        }
+        questionViewModel.allQuestions?.observe(this){
+            Timber.tag("room").d(it.toString())
+            if(question.isEmpty() && !Utils.isNetworkAvailable(this)){
+                loadDataFromRoom(it)
+            }
+        }
 
     }
 
 
-//    private fun saveToDb(question: List<Item>) {
-//        for(q in question){
-//            questionViewModel.addQuestion(q)
-//        }
-//    }
+    private fun saveToDb(question: List<Item>) {
+        for(q in question){
+            questionViewModel.addQuestion(QuestionEntity(q))
+        }
+    }
 
     private fun initRcv( mList: List<Item>){
         calculateAverage(mList)
@@ -135,8 +135,8 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
                 filters?.add(tag)
             }
         }
-        val view = sumView/ mList!!.size
-        val ans = sumAns/mList!!.size
+        val view = sumView/ mList.size
+        val ans = sumAns/ mList.size
         binding.tvAvgViewCount.text = resources.getString(R.string.avg_view_count,view.toString())
         binding.tvAvgAnswerCount.text = resources.getString(R.string.avg_ans_count,ans.toString())
     }
@@ -149,29 +149,29 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
     }
 
     private fun filterItemByTag(tag: String){
-        if(!question.isNullOrEmpty()){
-            val adapter = question?.let { QuestionListAdapter(it) }
+        if(question.isNotEmpty()){
+            val adapter = QuestionListAdapter(question)
             binding.rcvQuestions.adapter = adapter
             val filteredList = mutableListOf<Item>()
-            for(q in question!!){
+            for(q in question){
                 if(q.tags.contains(tag)){
                     filteredList.add(q)
                 }
             }
             if(filteredList.isEmpty()){
                 binding.clearFilter.visibility = View.GONE
-                adapter?.filterList(question!!)
+                adapter.filterList(question)
             } else {
                 binding.clearFilter.visibility = View.VISIBLE
-                adapter?.filterList(filteredList)
+                adapter.filterList(filteredList)
             }
         }
     }
     private fun filter(text: String){
-        val adapter = question?.let { QuestionListAdapter(it) }
+        val adapter = QuestionListAdapter(question)
         binding.rcvSearch.adapter = adapter
         val filteredList = mutableListOf<Item>()
-        for(q in question!!){
+        for(q in question){
             if (q.title.lowercase().contains(text.lowercase())
                 || q.owner.displayName.lowercase().contains(text.lowercase())) {
                 filteredList.add(q)
@@ -181,20 +181,36 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
         if(filteredList.isEmpty()){
             binding.searchLayout.visibility = View.GONE
             binding.mainContainerLayout.visibility = View.VISIBLE
-            initRcv(question!!)
+            initRcv(question)
         } else {
             binding.mainContainerLayout.visibility = View.GONE
             binding.searchLayout.visibility = View.VISIBLE
-            adapter?.filterList(filteredList)
+            adapter.filterList(filteredList)
         }
     }
 
     private fun updateRcv(){
         binding.mainContainerLayout.visibility = View.VISIBLE
+        binding.tvAvgViewCount.visibility = View.VISIBLE
+        binding.tvAvgAnswerCount.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
         binding.clearFilter.visibility = View.GONE
-        val adapter = question?.let { QuestionListAdapter(it) }
+        val adapter = QuestionListAdapter(question)
         binding.rcvQuestions.layoutManager = LinearLayoutManager(this)
         binding.rcvQuestions.adapter = adapter
+    }
+
+    private fun loadDataFromRoom(list: List<QuestionEntity>) {
+        if(list.isNotEmpty()){
+            val cachedQuestions = mutableListOf<Item>()
+            for(item in list){
+                cachedQuestions.add(item.questions)
+            }
+            Timber.tag("Room").d("Loading From Room")
+            question = cachedQuestions
+            calculateAverage(question)
+            updateRcv()
+        }
     }
 
 

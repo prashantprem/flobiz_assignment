@@ -155,4 +155,5 @@ class QuestionResponse {
         @Expose
         val link: String,
     )
+
 }
