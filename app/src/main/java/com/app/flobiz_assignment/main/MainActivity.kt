@@ -1,8 +1,17 @@
 package com.app.flobiz_assignment.main
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +27,7 @@ import com.app.flobiz_assignment.room.QuestionViewModal
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
@@ -28,6 +37,9 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
     private lateinit var binding: ActivityMainBinding
     private var question : List<Item>  = ArrayList()
     private var filters : HashSet<String> ? = null
+    private var networkCallback: NetworkCallback? = null
+    private var connectivityManager: ConnectivityManager? = null
+    private var isNetworkAvailable = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +52,11 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
         setContentView(binding.root)
         if(Utils.isNetworkAvailable(this)){
             viewModel.fetchQuestions()
+            isNetworkAvailable = true
         }
         observeViewModel()
         setUpListeners()
+        observeNetworkChange()
     }
 
     private fun setUpListeners() {
@@ -213,5 +227,46 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
         }
     }
 
+
+    private fun observeNetworkChange() {
+        networkCallback = object : NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                runOnUiThread{
+                    if(!isNetworkAvailable){
+                        binding.progressBar.visibility = View.VISIBLE
+                        viewModel.fetchQuestions()
+                    }
+                    isNetworkAvailable = true
+                }
+                Timber.tag("ConnectionCallback").d("Network Available")
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                isNetworkAvailable = false
+                Timber.tag("ConnectionCallback").d("Network Lost")
+            }
+        }
+        connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connectivityManager?.registerDefaultNetworkCallback(networkCallback as NetworkCallback)
+        } else {
+            val request = NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build()
+            connectivityManager?.registerNetworkCallback(request,
+                networkCallback as NetworkCallback
+            )
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(connectivityManager != null && networkCallback != null){
+            connectivityManager?.unregisterNetworkCallback(networkCallback!!)
+            Timber.tag("ConnectionCallback").d("Stopped listening to connection")
+        }
+    }
 
 }
