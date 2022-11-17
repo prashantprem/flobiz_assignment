@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.flobiz_assignment.R
 import com.app.flobiz_assignment.adapter.FilterAdapter
@@ -51,7 +52,7 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
                     })
                 }
             }
-        binding.rcvFilters.layoutManager = LinearLayoutManager(activity)
+        binding.rcvFilters.layoutManager = GridLayoutManager(activity,2)
         binding.rcvFilters.adapter = adapter
 
 

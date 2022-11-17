@@ -34,9 +34,9 @@ class FilterAdapter(
         if(holder is TagViewHolder) {
 
             if(selectedPosition == holder.absoluteAdapterPosition) {
-                holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.white))
+                holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.active))
             } else {
-                holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.grey))
+                holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.in_active))
             }
 
             setHolderData(holder, filters[holder.absoluteAdapterPosition])
@@ -45,11 +45,11 @@ class FilterAdapter(
                 if(selectedPosition == holder.absoluteAdapterPosition) {
                     selectedPosition = -1;
                     holder.itemView.isSelected = false
-                    holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.grey))
+                    holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.active))
                 } else {
                     selectedPosition = holder.absoluteAdapterPosition
                     holder.itemView.isSelected = true
-                    holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.white))
+                    holder.tagCard.setCardBackgroundColor(context.resources.getColor(R.color.in_active))
                     onTagClickInterface.onTagSelected(tag = filters.get(holder.absoluteAdapterPosition))
                 }
                 notifyDataSetChanged()

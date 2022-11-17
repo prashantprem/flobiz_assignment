@@ -2,21 +2,26 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tag_card"
-    app:cardBackgroundColor="@color/pluto___dull_green"
-    android:layout_margin="10dp"
-    app:cardCornerRadius="5dp"
+    app:cardBackgroundColor="@color/in_active"
+    android:layout_marginTop="@dimen/_16sdp"
+    android:layout_marginStart="@dimen/_8sdp"
+    android:layout_marginEnd="@dimen/_8sdp"
+    app:cardCornerRadius="@dimen/_5sdp"
     android:layout_width="match_parent"
+    android:layout_gravity="center_horizontal"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tv_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25sdp"
+        android:textSize="@dimen/_9sdp"
+        android:layout_margin="@dimen/_4sdp"
+        android:gravity="center"
         android:layout_gravity="center"
-        android:text="Python"
-        android:textColor="@color/black"
-        android:textStyle="bold"/>
+        android:text="filters"
+        android:textAllCaps="true"
+        android:fontFamily="@font/muli_semibold"
+        android:textColor="@color/white" />
 
 </androidx.cardview.widget.CardView>
