@@ -14,18 +14,13 @@ import com.app.flobiz_assignment.R
 
 class FilterAdapter(
     val context: Context,
-    val filters: ArrayList<String>,
+    private val filters: ArrayList<String>,
     private val onTagClickInterface: OnTagClickInterface
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     private var selectedPosition = -1
-
-    public fun setAllUnselected(call: Boolean) {
-        if(call)
-            selectedPosition = -1
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_filter, parent, false)

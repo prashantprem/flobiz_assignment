@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity(), FilterAdapter.OnTagClickInterface {
         viewModel.allQuestionList.observe(this){
             Timber.tag("Test").d(it.toString())
             if(it != null){
+                questionViewModel.deleteQuestions()
                 question = it
                 initRcv(it)
                 saveToDb(question)
